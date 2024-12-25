@@ -45,7 +45,7 @@ def create_product_with_images(request):
 
     return JsonResponse({'error': 'Seules les requêtes POST sont autorisées.'}, status=405)
 
-#############################
+################################################################
 def create_order(request):
     if request.method == 'POST':
         # Récupérer les données de la requête
@@ -119,7 +119,7 @@ def create_payment(request):
 
     return JsonResponse({'error': 'Seules les requêtes POST sont autorisées.'}, status=405)
 
-##############################
+##################################################################""
 
 def get_product_comments(request, product_id):
     product = get_object_or_404(Product, id=product_id)
@@ -149,3 +149,5 @@ def create_comment(request, product_id):
         )
         return JsonResponse({'message': 'Commentaire créé avec succès!', 'comment_id': comment.id}, status=201)
     return JsonResponse({'error': 'Seules les requêtes POST sont autorisées.'}, status=405)
+
+###################################################
