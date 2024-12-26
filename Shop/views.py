@@ -48,14 +48,12 @@ def create_product_with_images(request):
 ################################################################
 def create_order(request):
     if request.method == 'POST':
-        # Récupérer les données de la requête
         buyer_id = request.POST.get('buyer_id')
         product_id = request.POST.get('product_id')
-        quantity = int(request.POST.get('quantity', 1))  # Par défaut, la quantité est 1
+        quantity = int(request.POST.get('quantity', 1)) 
 
         if not buyer_id or not product_id:
             return JsonResponse({'error': 'Les champs obligatoires sont manquants.'}, status=400)
-
         try:
             buyer = get_object_or_404(User, id=buyer_id)
             product = get_object_or_404(Product, id=product_id)
@@ -67,7 +65,6 @@ def create_order(request):
                 product=product,
                 total_price=total_price
             )
-
             return JsonResponse({'message': f'Commande #{order.id} créée avec succès!', 'order_id': order.id}, status=201)
 
         except Exception as e:
@@ -77,7 +74,6 @@ def create_order(request):
 
 def create_payment(request):
     if request.method == 'POST':
-        # Récupérer les données de la requête
         user_id = request.POST.get('user_id')
         order_id = request.POST.get('order_id')
         payment_method = request.POST.get('payment_method')
@@ -90,20 +86,17 @@ def create_payment(request):
             user = get_object_or_404(User, id=user_id)
             order = get_object_or_404(Order, id=order_id)
 
-            # Vérifier que le montant correspond au total de la commande
             if float(amount) != float(order.total_price):
                 return JsonResponse({'error': 'Le montant du paiement ne correspond pas au total de la commande.'}, status=400)
 
-            # Créer le paiement
             payment = Payment.objects.create(
                 user=user,
                 order=order,
                 amount=amount,
                 payment_method=payment_method,
-                status='Completed'  # Mise à jour automatique du statut en "Complété" lors de la création du paiement
+                status='Completed' 
             )
 
-            # Mettre à jour le statut de l'ordre à "Paid"
             order.status = 'Paid'
             order.save()
 
