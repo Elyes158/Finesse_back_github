@@ -5,6 +5,7 @@ import random
 
 
 class UserProfile(models.Model):
+    avatar = models.ImageField(upload_to='avatars/', blank=True, null=True)  
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
     phone_number = models.CharField(max_length=15, blank=True, null=True)
     first_name = models.CharField(max_length=15, blank= True, null = True)
