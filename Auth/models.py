@@ -17,6 +17,8 @@ class UserProfile(models.Model):
     is_email_verified = models.BooleanField(default=False)
     verification_code = models.CharField(max_length=6, blank=True, null=True)
     description = models.CharField(max_length=100,blank= True, null=True)
+    isPrivacyChecked = models.BooleanField(default=False)
+    isSendMailChacked = models.BooleanField(default = False)
     def __str__(self):
         return f"Profile of {self.user.username}"
     def generate_verification_code(self):

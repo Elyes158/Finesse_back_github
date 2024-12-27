@@ -109,11 +109,8 @@ def register_profile(request, userId):
             phone_number = request.POST.get('phone_number')
             address = request.POST.get('address')
             description = request.POST.get('description')
-
-            # Utilisez request.FILES pour récupérer le fichier image
             avatar = request.FILES.get('avatar')
             
-            # Récupérer l'utilisateur et son profil
             user = User.objects.get(id=userId)
             profile = user.profile
             profile.full_name = full_name
@@ -124,13 +121,36 @@ def register_profile(request, userId):
             # Si l'image est présente, on l'ajoute au profil
             if avatar:
                 profile.avatar = avatar
-            
             profile.save()
-
             return JsonResponse({'message': 'Profile updated successfully.'}, status=200)
 
         except Exception as e:
             print(str(e))
             return JsonResponse({'message': str(e)}, status=400)
-# @csrf_exempt
-# def create_username(request , )
+@csrf_exempt
+def create_username(request, userId):
+    if request.method == "POST":
+        try:
+            data = json.loads(request.body)
+            username = data.get('username')
+            isPolicy = data.get('policy')
+            isMail = data.get('mail')
+            
+            # Vérification que policy est True
+            if not isPolicy:
+                return JsonResponse({'message': 'You must accept the privacy policy.'}, status=400)
+            
+            user = User.objects.get(id=userId)
+            profile = user.profile
+            
+            # Mise à jour des données
+            profile.isPrivacyChecked = isPolicy
+            profile.isSendMailChacked = isMail
+            user.username = username
+            user.save()
+            profile.save()
+            
+            return JsonResponse({'message': 'Profile updated successfully.'}, status=200)
+        except Exception as e:
+            print(str(e))
+            return JsonResponse({'message': str(e)}, status=400)
