@@ -132,3 +132,5 @@ def register_profile(request, userId):
         except Exception as e:
             print(str(e))
             return JsonResponse({'message': str(e)}, status=400)
+# @csrf_exempt
+# def create_username(request , )
