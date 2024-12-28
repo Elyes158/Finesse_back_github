@@ -19,6 +19,9 @@ from django.urls import path , include
 
 from Finesse_backend import settings
 from django.conf.urls.static import static
+from django.urls import re_path
+from django.views.static import serve
+from django.conf import settings
 
 
 urlpatterns = [
@@ -26,6 +29,8 @@ urlpatterns = [
     path('api/auth/', include('Auth.urls')),
     path('api/products/',include('Shop.urls')),
     #path('accounts/', include('Auth.urls')),
+    re_path(r'^media/(?P<path>.*)$', serve,{'document_root': settings.MEDIA_ROOT}),
+    re_path(r'^static/(?P<path>.*)$', serve,{'document_root': settings.STATIC_ROOT}),
 
 ]
 if settings.DEBUG:
