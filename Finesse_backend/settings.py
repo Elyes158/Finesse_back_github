@@ -11,6 +11,18 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 import os
+import sys
+
+if __name__ == "__main__":
+    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "your_project.settings")
+    
+    # Ajoutez ceci avant `execute_from_command_line`
+    port = os.environ.get("PORT", 8000)  # Render définit automatiquement une variable `PORT`
+    from django.core.management.commands.runserver import Command as runserver
+    runserver.default_port = port
+
+    from django.core.management import execute_from_command_line
+    execute_from_command_line(sys.argv)
 
 SITE_ID = 1
 # We need these lines below to allow the Google sign in popup to work.
