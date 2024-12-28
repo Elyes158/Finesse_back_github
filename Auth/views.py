@@ -323,14 +323,12 @@ def google_login(request):
     print("I'm used")
     if request.method == "POST":
         try:
-            # Vérifier le type de contenu
             if request.content_type == "application/x-www-form-urlencoded":
-                data = request.POST  # Utiliser QueryDict pour extraire les données
+                data = request.POST 
             elif request.content_type == "application/json":
-                data = json.loads(request.body)  # Traiter les requêtes JSON
+                data = json.loads(request.body)
             else:
                 return JsonResponse({"message": "Unsupported content type"}, status=400)
-
             print(f"Parsed data: {data}")
 
             id_token = data.get('id_token')
@@ -369,9 +367,7 @@ def google_login(request):
                     token_instance, created = AuthToken.objects.get_or_create(user=user)
                     token_instance.token = access_token
                     token_instance.save()
-
                     message = "User updated" if google_created else "User already updated"
-
                     return JsonResponse({
                         "message": f"Login successful: {message}",
                         "user": {
