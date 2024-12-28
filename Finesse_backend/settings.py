@@ -45,7 +45,9 @@ DEBUG = False
 
 ALLOWED_HOSTS = ['192.168.1.16','finesse-backend.onrender.com']
 
-
+CSRF_TRUSTED_ORIGINS = [
+    'https://finesse-backend.onrender.com',
+]
 
 INSTALLED_APPS = [
     'django.contrib.admin',
