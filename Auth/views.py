@@ -369,18 +369,21 @@ def google_login(request):
                     token_instance.save()
                     message = "User updated" if google_created else "User already updated"
                     return JsonResponse({
-                        "message": f"Login successful: {message}",
-                        "user": {
-                            "access_token":access_token,
-                            "id": user.id,
-                            "email": user.email,
-                            "username": user.username,
-                            "first_name": user_first_name,  # Envoyer séparément
-                            "last_name": user_last_name,    # Envoyer séparément
-                            "full_name": user_google.full_name,  # Si besoin
-                            "avatar": user_google.avatar  # URL directement serialisée
-                        }
-                    })
+                    'message': 'Connexion réussie',
+                    'user_id': user.id,
+                    'access_token': access_token,
+                    'refresh_token': str(refresh),
+                    'user_profile': {
+                        'email':user.email,
+                        'username':user.username,
+                        'avatar': user_google.avatar if user_google.avatar else None,
+                        'phone_number': user_google.phone_number,
+                        'full_name': user_google.full_name,
+                        'address': user_google.address,
+                        'description': user_google.description,
+                       
+                    }
+                }, status=200)
                 else:
                     return JsonResponse({"message": "Invalid token"}, status=400)
             else:
