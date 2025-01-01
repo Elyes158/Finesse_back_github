@@ -79,7 +79,9 @@ def sign_in(request):
             username = data.get('username')
             password = data.get('password')
             user = authenticate(request, username=username, password=password)
-            if user is not None:
+            userr = User.objects.get(username = username)
+            mail_verfied = userr.profile.is_email_verified
+            if user is not None and mail_verfied:
                 login(request, user)
                 refresh = RefreshToken.for_user(user)
                 access_token = str(refresh.access_token)
@@ -87,9 +89,7 @@ def sign_in(request):
                 token_instance.token = access_token
                 token_instance.save()
 
-                # Récupérer le profil de l'utilisateur (UserProfile)
                 user_profile = user.profile  # Accéder au profil de l'utilisateur via la relation OneToOne
-
                 return JsonResponse({
                     'message': 'Connexion réussie',
                     'user_id': user.id,
