@@ -48,6 +48,11 @@ ALLOWED_HOSTS = ['192.168.1.16','finesse-backend.onrender.com']
 CSRF_TRUSTED_ORIGINS = [
     'https://finesse-backend.onrender.com',
 ]
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:3000',  # Remplacez par l'URL de votre frontend
+    'http://127.0.0.1:3000',
+    'http://192.168.1.16',
+]
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -58,6 +63,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'Auth',
     'Shop',
+    'Stories',
     'rest_framework',
     'rest_framework_simplejwt',
     'django.contrib.sites',
@@ -65,6 +71,7 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
+    'corsheaders',
 ]
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
@@ -81,6 +88,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'allauth.account.middleware.AccountMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = 'Finesse_backend.urls'

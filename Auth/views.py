@@ -52,21 +52,15 @@ def sign_up(request):
 def verify_code(request):
     if request.method == "POST":
         try:
-            # Récupération des données envoyées par le client
             data = json.loads(request.body)
             user_id = data.get('user_id')
             verification_code = data.get('verification_code')
 
-            # Recherche de l'utilisateur
             user = User.objects.get(id=user_id)
             profile = user.profile
-
-            # Vérification du code
             if profile.verification_code == verification_code:
                 profile.is_email_verified = True
                 profile.save()
-
-                # Réponse avec un message de succès
                 return JsonResponse({'message': 'Votre email a été vérifié avec succès.'}, status=200)
             else:
                 return JsonResponse({'message': 'Code de vérification incorrect'}, status=400)
@@ -102,6 +96,7 @@ def sign_in(request):
                     'access_token': access_token,
                     'refresh_token': str(refresh),
                     'user_profile': {
+                        'hasStory':user.profile.hasStory,
                         'email':user.email,
                         'username':user.username,
                         'avatar': user_profile.avatar.url if user_profile.avatar else None,

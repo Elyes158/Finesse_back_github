@@ -4,6 +4,8 @@ import random
 
 from Finesse_backend import settings
 from django.core.mail import send_mail
+from django.utils.timezone import now, timedelta
+
 
 
 
@@ -19,8 +21,9 @@ class UserProfile(models.Model):
     description = models.CharField(max_length=100,blank= True, null=True)
     isPrivacyChecked = models.BooleanField(default=False)
     isSendMailChacked = models.BooleanField(default = False)
+    hasStory = models.BooleanField(default = False)
     def __str__(self):
-        return f"Profile of {self.user.username}"
+        return f"Profile of {self.user.username} {self.user.id}"
     def generate_verification_code(self):
         """Génère un code de vérification aléatoire."""
         self.verification_code = str(random.randint(100000, 999999))
