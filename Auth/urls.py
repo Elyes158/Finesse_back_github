@@ -11,5 +11,5 @@ urlpatterns = [
     path('<int:userId>/createUsernamegoogle/',view=views.create_username_google , name = "create_username_google"),
     path('googleSign/',view=views.google_register,name="google_signin"),
     path('googlelogin/',view=views.google_login,name="google_login"),
-
+    path('facebookSign/',view=views.facebook_register,name="facebook_signin"),
 ]

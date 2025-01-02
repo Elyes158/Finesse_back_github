@@ -48,6 +48,19 @@ class UserGoogle(models.Model) :
     isSendMailChacked = models.BooleanField(default = False)
     def __str__(self):
         return f"Profile of {self.user.username}"
+    
+class UserFacebook(models.Model) : 
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='facebookProfile')
+    full_name = models.CharField(max_length=50,null=True)
+    avatar = models.URLField(max_length=500, blank=True, null=True)  # Assurez-vous que ce champ est présent
+    phone_number = models.CharField(max_length=15, blank=True, null=True)
+    address = models.CharField(max_length=100 , blank= True , null = True)
+    is_email_verified = models.BooleanField(default=False)
+    description = models.CharField(max_length=100,blank= True, null=True)
+    isPrivacyChecked = models.BooleanField(default=False)
+    isSendMailChacked = models.BooleanField(default = False)
+    def __str__(self):
+        return f"Profile of {self.user.username}"
 
 
 class AuthToken(models.Model):
