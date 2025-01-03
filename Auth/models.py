@@ -5,6 +5,8 @@ import random
 from Finesse_backend import settings
 from django.core.mail import send_mail
 from django.utils.timezone import now, timedelta
+from django.utils import timezone
+import uuid
 
 
 
@@ -68,3 +70,25 @@ class AuthToken(models.Model):
     token = models.CharField(max_length=255)
     def __str__(self):
         return f"Token for {self.user.username}"
+    
+class PasswordResetToken(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)  # link to the User model
+    token = models.CharField(max_length=255, unique=True)  # Token for password reset
+    created_at = models.DateTimeField(auto_now_add=True)  # When the token was created
+    expires_at = models.DateTimeField()  # Expiration date/time for the token
+
+    def save(self, *args, **kwargs):
+        # Set expiration time to 1 hour from token creation if not provided
+        if not self.expires_at:
+            self.expires_at = timezone.now() + timezone.timedelta(hours=1)
+        if not self.token:
+            # Generate a new token if it's not set
+            self.token = str(uuid.uuid4())
+        super().save(*args, **kwargs)
+
+    def is_expired(self):
+        """Check if the token has expired."""
+        return timezone.now() > self.expires_at
+
+    def __str__(self):
+        return f"Password Reset Token for {self.user.email}"
