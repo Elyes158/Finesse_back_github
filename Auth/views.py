@@ -100,7 +100,12 @@ def change_password(request, reset_token):
 
             user = valid_token.user
 
-            new_password = request.POST.get('new_password')
+            # Charger le mot de passe depuis le corps JSON
+            try:
+                data = json.loads(request.body)
+                new_password = data.get('new_password')
+            except json.JSONDecodeError:
+                return JsonResponse({'message': 'Invalid JSON format.'}, status=400)
 
             if not new_password:
                 return JsonResponse({'message': 'New password is required.'}, status=400)
@@ -114,6 +119,7 @@ def change_password(request, reset_token):
 
         except Exception as e:
             return JsonResponse({'message': str(e)}, status=400)
+
 
 @csrf_exempt
 def verify_code(request):
