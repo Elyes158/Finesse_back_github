@@ -191,8 +191,7 @@ def sign_in(request):
                 token_instance, created = AuthToken.objects.get_or_create(user=user)
                 token_instance.token = access_token
                 token_instance.save()
-
-                user_profile = user.profile  # Accéder au profil de l'utilisateur via la relation OneToOne
+                user_profile = user.profile
                 return JsonResponse({
                     'message': 'Connexion réussie',
                     'user_id': user.id,
@@ -209,9 +208,8 @@ def sign_in(request):
                         'is_email_verified': user_profile.is_email_verified,
                         'verification_code': user_profile.verification_code,
                         'description': user_profile.description,
-                       
                     }
-                }, status=200)
+                },status=200)
             else:
                 return JsonResponse({'message': 'Nom d\'utilisateur ou mot de passe incorrect'}, status=400)
         except Exception as e:
