@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from Shop.models import Category, Comment, Favorite, Order, Payment, Product, ProductImage, Review
+from Shop.models import Category, Comment, Favorite, Order, Payment, Product, ProductImage, Review, SubCategory
 
 # Register your models here.
 admin.site.register(Category)
@@ -11,6 +11,7 @@ admin.site.register(Review)
 admin.site.register(ProductImage)
 admin.site.register(Order)
 admin.site.register(Comment)
+admin.site.register(SubCategory)
 
 
 
