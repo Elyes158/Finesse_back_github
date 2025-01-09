@@ -19,7 +19,7 @@ class SubCategory(models.Model):
     def __str__(self):
         return f"{self.name} ({self.category.name})"
 
-    
+
 class Product(models.Model):
     owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name="products")
     subcategory = models.ForeignKey(SubCategory, on_delete=models.SET_NULL, null=True, related_name="products")
