@@ -1,49 +1,77 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import JsonResponse
-from .models import Order, Payment, Product, Category, ProductImage,Comment
+from .models import Order, Payment, Product, Category, ProductImage,Comment, SubCategory
 from django.contrib.auth.models import User
 from django.views.decorators.csrf import csrf_exempt
 
 # Create your views here.
 
+import json
+from django.http import JsonResponse
+from django.shortcuts import get_object_or_404
+from .models import Product, ProductImage, User, Category
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.shortcuts import get_object_or_404
+import json
+from .models import Product, ProductImage, User, SubCategory
+
+@csrf_exempt
 def create_product_with_images(request):
     if request.method == 'POST':
-        # Récupérer les données de la requête
-        owner_id = request.POST.get('owner_id')
-        category_id = request.POST.get('category_id')
-        title = request.POST.get('title')
-        description = request.POST.get('description')
-        price = request.POST.get('price')
-        is_available = request.POST.get('is_available', 'true') == 'true'
-
-        if not owner_id or not title or not price:
-            return JsonResponse({'error': 'Les champs obligatoires sont manquants.'}, status=400)
-
         try:
+            print("Début de la requête POST")  # Premier print pour indiquer que la requête a commencé
+
+            # Récupérer les données JSON
+            data = request.POST
+            print("Données reçues:", data)  # Print les données reçues
+
+            owner_id = data.get('owner_id')
+            category_id = data.get('category_id')
+            title = data.get('title')
+            description = data.get('description')
+            price = data.get('price')
+            is_available = data.get('is_available', 'true') == 'true'
+
+            if not owner_id or not title or not price:
+                return JsonResponse({'error': 'Les champs obligatoires sont manquants.'}, status=400)
+
+            print("Données validées pour owner_id:", owner_id, "title:", title, "price:", price)
+
             owner = get_object_or_404(User, id=owner_id)
-            category = get_object_or_404(Category, id=category_id) if category_id else None
+            print("Utilisateur récupéré:", owner)
+
+            Subcategory = get_object_or_404(SubCategory, name=category_id) if category_id else None
+            print("Sous-catégorie récupérée:", Subcategory)
 
             # Créer le produit
             product = Product.objects.create(
                 owner=owner,
-                category=category,
+                subcategory=Subcategory,
                 title=title,
                 description=description,
                 price=price,
                 is_available=is_available
             )
+            print(f"Produit '{product.title}' créé avec succès!")
 
             # Gérer les images
             images = request.FILES.getlist('images')
+            print("Images reçues:", images)  # Vérifie les images reçues
+
             for image in images:
+                print(f"Enregistrement de l'image: {image}")
                 ProductImage.objects.create(product=product, image=image)
 
             return JsonResponse({'message': f'Produit "{product.title}" avec images créé avec succès!'}, status=201)
 
         except Exception as e:
+            print("Erreur rencontrée:", str(e))  # Affiche l'erreur rencontrée
             return JsonResponse({'error': str(e)}, status=500)
 
     return JsonResponse({'error': 'Seules les requêtes POST sont autorisées.'}, status=405)
+
+
 
 ################################################################
 def create_order(request):
