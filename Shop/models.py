@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+import uuid
 
 
 # Create your models here.
@@ -7,7 +8,6 @@ class Category(models.Model):
     name = models.CharField(max_length=100, unique=True)
     description = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
-
     def __str__(self):
         return self.name
 
@@ -21,6 +21,7 @@ class SubCategory(models.Model):
 
 
 class Product(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)  # Champ ID avec UUID
     owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name="products")
     subcategory = models.ForeignKey(SubCategory, on_delete=models.SET_NULL, null=True, related_name="products")
     title = models.CharField(max_length=255)
@@ -28,8 +29,9 @@ class Product(models.Model):
     price = models.DecimalField(max_digits=10, decimal_places=2)
     is_available = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
+    validated = models.BooleanField(default=False)
     def __str__(self):
-        return self.owner.username
+        return f"{self.title} - {self.owner.username}"
         
 class ProductImage(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="images")

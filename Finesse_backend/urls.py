@@ -23,7 +23,6 @@ from django.urls import re_path
 from django.views.static import serve
 from django.conf import settings
 
-
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/auth/', include('Auth.urls')),

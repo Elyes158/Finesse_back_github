@@ -55,7 +55,6 @@ def create_product_with_images(request):
             )
             print(f"Produit '{product.title}' créé avec succès!")
 
-            # Gérer les images
             images = request.FILES.getlist('images')
             print("Images reçues:", images)  # Vérifie les images reçues
 
@@ -70,6 +69,41 @@ def create_product_with_images(request):
             return JsonResponse({'error': str(e)}, status=500)
 
     return JsonResponse({'error': 'Seules les requêtes POST sont autorisées.'}, status=405)
+
+
+@csrf_exempt
+def get_products_by_user(request, userId):
+    print("La fonction a été appelée.")  # Vérifier si la fonction est appelée
+    if request.method == 'GET':
+        try:
+            print(f"Requête pour récupérer les produits de l'utilisateur avec ID: {userId}")
+            user = get_object_or_404(User, id=userId)
+            print(f"Utilisateur récupéré : {user}")
+            products = Product.objects.filter(owner=user, validated=True)
+            print(f"Produits trouvés : {products.count()}")
+            products_data = []
+            for product in products:
+                images = ProductImage.objects.filter(product=product)
+                images_urls = [image.image.url for image in images]
+                print("heeeeeeeeeeeeeeey")
+                product_data = {
+                    'id': product.id,
+                    'title': product.title,
+                    'description': product.description,
+                    'price': product.price,
+                    'is_available': product.is_available,
+                    'subcategory': product.subcategory.name if product.subcategory else None,
+                    'images': images_urls,
+                }
+                products_data.append(product_data)
+            return JsonResponse({'products': products_data}, status=200)
+
+        except Exception as e:
+            print(f"Erreur rencontrée lors de la récupération des produits : {str(e)}")
+            return JsonResponse({'error': f"Erreur : {str(e)}"}, status=500)
+
+    return JsonResponse({'error': 'Seules les requêtes GET sont autorisées.'}, status=405)
+
 
 
 

@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 import json
 
 import requests
-from .models import AuthToken, PasswordResetToken, UserGoogle, UserProfile
+from .models import AdminUser, AuthToken, PasswordResetToken, UserGoogle, UserProfile
 from django.http import JsonResponse
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.core.mail import send_mail
@@ -15,9 +15,32 @@ import traceback
 import uuid
 from django.utils import timezone
 from django.contrib.auth.hashers import make_password
+from django.contrib.auth.hashers import check_password
 
+@csrf_exempt
+def login_view_admin(request):
+    print("marahab")
+    if request.method == 'POST':
+        print("marahab")
+        identifier = request.POST.get('identifier')
+        password = request.POST.get('password')
+        print(identifier,password)
+        try:
+            user = AdminUser.objects.get(identifier=identifier)
 
+            # Vérification du mot de passe
+            if (password ==user.password):
+                # Si authentification réussie, retourner une réponse JSON
+                return JsonResponse({'message': 'Connexion réussie', 'status': 'success'}, status=200)
+            else:
+                # Si mot de passe incorrect
+                return JsonResponse({'message': 'Mot de passe incorrect', 'status': 'error'}, status=400)
+        except AdminUser.DoesNotExist:
+            # Si l'identifiant n'existe pas
+            return JsonResponse({'message': 'Identifiant non trouvé', 'status': 'error'}, status=404)
 
+    # Si ce n'est pas une requête POST, retourner une erreur
+    return JsonResponse({'message': 'Méthode non autorisée', 'status': 'error'}, status=405)
 
 
 
