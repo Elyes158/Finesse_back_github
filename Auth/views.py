@@ -506,6 +506,7 @@ def google_login(request):
                         'full_name': user_google.full_name,
                         'address': user_google.address,
                         'description': user_google.description,
+                        'hasStory':user_google.hasStory,
                        
                     }
                 }, status=200)
@@ -721,11 +722,16 @@ def facebook_login(request):
                     'user_profile': {
                         'email':user.email,
                         'username':user.username,
-                        'avatar': user_google.avatar if user_google.avatar else None,
+                        'avatar': user_google.avatar["data"]["url"] if user_google.avatar else None,
                         'phone_number': user_google.phone_number,
                         'full_name': user_google.full_name,
                         'address': user_google.address,
                         'description': user_google.description,
+                        'hasStory':user_google.hasStory,
+                        'is_email_verified':True,
+                        'verification_code':"",
+
+                        
                        
                     }
                 }, status=200)

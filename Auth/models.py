@@ -51,6 +51,7 @@ class UserGoogle(models.Model) :
     description = models.CharField(max_length=100,blank= True, null=True)
     isPrivacyChecked = models.BooleanField(default=False)
     isSendMailChacked = models.BooleanField(default = False)
+    hasStory = models.BooleanField(default = False)
     def __str__(self):
         return f"Profile of {self.user.username}"
     
@@ -64,6 +65,7 @@ class UserFacebook(models.Model) :
     description = models.CharField(max_length=100,blank= True, null=True)
     isPrivacyChecked = models.BooleanField(default=False)
     isSendMailChacked = models.BooleanField(default = False)
+    hasStory = models.BooleanField(default = False)
     def __str__(self):
         return f"Profile of {self.user.username}"
 
