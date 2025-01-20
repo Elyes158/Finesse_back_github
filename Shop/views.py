@@ -31,6 +31,7 @@ def create_product_with_images(request):
             title = data.get('title')
             description = data.get('description')
             price = data.get('price')
+            etat = data.get('etat'),
             is_available = data.get('is_available', 'true') == 'true'
 
             if not owner_id or not title or not price:
@@ -44,14 +45,14 @@ def create_product_with_images(request):
             Subcategory = get_object_or_404(SubCategory, name=category_id) if category_id else None
             print("Sous-catégorie récupérée:", Subcategory)
 
-            # Créer le produit
             product = Product.objects.create(
                 owner=owner,
                 subcategory=Subcategory,
                 title=title,
                 description=description,
                 price=price,
-                is_available=is_available
+                is_available=is_available,
+                etat = etat
             )
             print(f"Produit '{product.title}' créé avec succès!")
 
@@ -105,6 +106,36 @@ def get_products_by_user(request, userId):
     return JsonResponse({'error': 'Seules les requêtes GET sont autorisées.'}, status=405)
 
 
+
+@csrf_exempt
+def get_products(request):
+    print("La fonction a été appelée.")  # Vérifier si la fonction est appelée
+    if request.method == 'GET':
+        try:
+            products = Product.objects.filter(validated=True)
+            print(f"Produits trouvés : {products.count()}")
+            products_data = []
+            for product in products:
+                images = ProductImage.objects.filter(product=product)
+                images_urls = [image.image.url for image in images]
+                print("heeeeeeeeeeeeeeey")
+                product_data = {
+                    'id': product.id,
+                    'title': product.title,
+                    'description': product.description,
+                    'price': product.price,
+                    'is_available': product.is_available,
+                    'subcategory': product.subcategory.name if product.subcategory else None,
+                    'images': images_urls,
+                }
+                products_data.append(product_data)
+            return JsonResponse({'products': products_data}, status=200)
+
+        except Exception as e:
+            print(f"Erreur rencontrée lors de la récupération des produits : {str(e)}")
+            return JsonResponse({'error': f"Erreur : {str(e)}"}, status=500)
+
+    return JsonResponse({'error': 'Seules les requêtes GET sont autorisées.'}, status=405)
 
 
 ################################################################

@@ -26,13 +26,14 @@ class Product(models.Model):
     subcategory = models.ForeignKey(SubCategory, on_delete=models.SET_NULL, null=True, related_name="products")
     title = models.CharField(max_length=255)
     description = models.TextField()
+    etat = models.CharField(max_length=255 , null=True)
     price = models.DecimalField(max_digits=10, decimal_places=2)
     is_available = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     validated = models.BooleanField(default=False)
     def __str__(self):
-        return f"{self.title} - {self.owner.username}"
-        
+        return f"{self.owner.username} - {self.created_at}"
+
 class ProductImage(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="images")
     image = models.ImageField(upload_to='product_images/')
