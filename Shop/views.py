@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import JsonResponse
-from .models import Order, Payment, Product, Category, ProductImage,Comment, SubCategory
+from .models import Order, Payment, Product, Category, ProductImage,Comment, RecentlyViewedProducts, SubCategory
 from django.contrib.auth.models import User
 from django.views.decorators.csrf import csrf_exempt
 
@@ -136,6 +136,26 @@ def get_products(request):
             return JsonResponse({'error': f"Erreur : {str(e)}"}, status=500)
 
     return JsonResponse({'error': 'Seules les requêtes GET sont autorisées.'}, status=405)
+
+@csrf_exempt
+def create_product_viewed(request):
+    print("La fonction a été appelée.")  # Vérifier si la fonction est appelée
+    if request.method == 'GET':
+        try:
+            product_id=request.POST.get("product_id")
+            user_id = request.POST.get("user_id")
+
+            product = Product.objects.filter(id = product_id)
+            user = User.objects.filter(id = user_id)
+
+            product_viewed = RecentlyViewedProducts.objects.create(
+                product = product,
+                owner = user,
+            )
+            product_viewed.save()
+        except Exception as e:
+            print(f"Erreur rencontrée lors de la récupération des produits : {str(e)}")
+            return JsonResponse({'error': f"Erreur : {str(e)}"}, status=500)
 
 
 ################################################################

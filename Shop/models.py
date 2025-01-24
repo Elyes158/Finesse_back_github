@@ -38,7 +38,11 @@ class ProductImage(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="images")
     image = models.ImageField(upload_to='product_images/')
     uploaded_at = models.DateTimeField(auto_now_add=True)
-
+    
+class RecentlyViewedProducts(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="viewed")
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name="userViewed")
+    viewed_at = models.DateTimeField(auto_now_add=True)
 
 class Order(models.Model):
     buyer = models.ForeignKey(User, on_delete=models.CASCADE, related_name="orders")

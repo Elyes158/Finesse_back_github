@@ -10,5 +10,6 @@ urlpatterns = [
     path('CreateproductComment/<int:product_id>/comment/', views.create_comment, name='create_comment'),
     path('payment/create/', views.create_payment, name='create_payment'),
     path('order/create/', views.create_order, name='create_order'),
+    path('createProductsViewed/', views.create_product_viewed, name='createProductsViewed'),
 
 ]
